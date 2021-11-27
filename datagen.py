@@ -25,6 +25,6 @@ def datagenerator(dims, num_examples, num_samples, mix_number):
             mu = mus[i,index,:]
             cov = covs[i,index,:,:]
             points[i,j,:] = np.random.multivariate_normal(mean= mu, cov=cov)
-    return(points, mus, covs)
+    return(points, mus, covs, probs)
 
 
