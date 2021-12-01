@@ -41,29 +41,65 @@ class RNVP(tf.keras.Model):
 
         
     def forward_transform(self,z):
+        """
+        Make a doc string :)
+        
+        Inputs: 
+            z:
+        Returns:
+            z:
+        """
         for i in range(self.depth):
             mask = self.mask[i]
-            reverse_mask = 1-mask
+            reverse_mask = 1 - mask
             z_prime = z * mask
             s_prime = self.s[i](z_prime)* reverse_mask
             t_prime = self.t[i](z_prime)* reverse_mask
-            z += z_prime + (reverse_mask * (z * tf.math.exp(s_prime) + t_prime))
+            z = z_prime + (reverse_mask * (z * tf.math.exp(s_prime) + t_prime))
         return z 
     
     def reverse_transform(self,x):
-        sldj = 
+        """
+        Make a doc string :)
 
+        Inputs: 
+            x:
+        Returns:
+            x:
+            sldj:
+        """
+        sldj = tf.zeros([x.shape[0]])
+        for i in reversed(range(len(self.t))):
+            mask = self.mask[i]
+            reverse_mask = 1 - mask
+            x_prime = x * mask
+            s_prime = self.s[i](x_prime)* reverse_mask
+            t_prime = self.t[i](x_prime)* reverse_mask
+            x = x_prime + (reverse_mask * (x - t_prime) * tf.math.exp(-s_prime))
+            sldj -= tf.math.reduce_sum(s_prime, axis=1)
+        return x, sldj
 
 
     def call(self, x):
+        """
+        Make a doc string :)
+
+        Inputs:
+            x:
+        Returns:
+            ...
+        """
 
 
-    def f(self, x):
-        log_det_J, z = x.new_zeros(x.shape[0]), x
-        for i in reversed(range(len(self.t))):
-            z_ = self.mask[i] * z
-            s = self.s[i](z_) * (1-self.mask[i])
-            t = self.t[i](z_) * (1-self.mask[i])
-            z = (1 - self.mask[i]) * (z - t) * torch.exp(-s) + z_
-            log_det_J -= s.sum(dim=1)
-        return z, log_det_J
+    def loss_function(self, z, logp):
+        """
+        what does it do?
+
+        Inputs:
+            z:
+            logp:
+        Returns:
+            ...
+        """
+        
+
