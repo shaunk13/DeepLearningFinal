@@ -25,7 +25,7 @@ class RNVP(tf.keras.Model):
         # of the networks 
 
         self.prior = tfp.distributions.MultivariateNormalFullCovariance(loc=tf.zeros(prior_dim), covariance_matrix= tf.eye(prior_dim))
-        self.mask = checkerboard(prior_dim, depth*2)
+        self.mask = checkerboard(prior_dim*depth, prior_dim)
         self.t = [Sequential()] * depth
         self.s = [Sequential()] * depth 
         self.hidden_size = 128
